@@ -46,7 +46,8 @@ function cssTransform(el,attr,val) {
 		mobile_img_height: "5rem",  //移动端版本所需的设置，img-slider，slider-img-wrapper，img-wrapper0img都会是这个宽度
 		mobile_img_sign_wrapper_pos_to_bottom: "0.3rem", //移动端版本圆形图标相对底部位置的设置
 		transitionTime: "0.3s",
-		autoPlayTime: 2000
+		autoPlayTime: 2000,
+		click_btn_least_gap: 1000 //当两次点击之间时间间隔大于1s时才能继续切换图片，防止连续点击一直切换图片的问题
 
     };
     
@@ -159,6 +160,7 @@ function cssTransform(el,attr,val) {
 		var vp_width = document.documentElement.clientWidth;
 		var timer = null;
 
+
 		// 点击向右轮播时图片会向左滑动，滑到最后一张时切换回第一张
 		function autoSwitchPic(event) {
 			var $slider_img_wrapper = $(".slider-img-wrapper");
@@ -176,30 +178,42 @@ function cssTransform(el,attr,val) {
 			$img_sign.eq(img_index).addClass("img-sign-active")
 				.siblings().removeClass("img-sign-active");
 		}
-
-
+		// 为防止连续点击一直切换图片的问题
+		var prev_clicked_time, cur_clicked_time;
 		$go_latter_link.on("click", function(event) {
+			cur_clicked_time = new Date();
 			clearInterval(timer);
-			autoSwitchPic(event);
-
+			//只有在第一次点击切换按钮时或两次点击之间时间间隔大于1s时才能继续切换图片，防止连续点击一直切换图片的问题
+			if (!prev_clicked_time || cur_clicked_time - prev_clicked_time > settings.click_btn_least_gap) {
+				autoSwitchPic(event);
+			}
+			
+			prev_clicked_time = cur_clicked_time;
 		});
 
 		$go_former_link.on("click", function(event) {
+			cur_clicked_time = new Date();
 			clearInterval(timer);
-			var $slider_img_wrapper = $(".slider-img-wrapper");
-			if (img_index <= 0) {
-				img_index = img_src_len_minus_one;
-				$slider_img_wrapper.animate({left: -img_src_len_minus_one * vp_width + "px" });
-				$img_sign.eq(img_index).addClass("img-sign-active")
-				.siblings().removeClass("img-sign-active");
-				return;
-			}
-			img_index--;
-			
-			$slider_img_wrapper.animate({left: "+=" + vp_width});
+			if (!prev_clicked_time || cur_clicked_time - prev_clicked_time > settings.click_btn_least_gap) {
+				var $slider_img_wrapper = $(".slider-img-wrapper");
+				//只有在第一次点击切换按钮时或两次点击之间时间间隔大于1s时才能继续切换图片，防止连续点击一直切换图片的问题
+				if (img_index <= 0) {
+					img_index = img_src_len_minus_one;
+					$slider_img_wrapper.animate({left: -img_src_len_minus_one * vp_width + "px" });
+					$img_sign.eq(img_index).addClass("img-sign-active")
+					.siblings().removeClass("img-sign-active");
+					return;
+				}
+				img_index--;
+				
+				$slider_img_wrapper.animate({left: "+=" + vp_width});
 
-			$img_sign.eq(img_index).addClass("img-sign-active")
-				.siblings().removeClass("img-sign-active");
+				$img_sign.eq(img_index).addClass("img-sign-active")
+					.siblings().removeClass("img-sign-active");
+
+			}
+			
+			prev_clicked_time = cur_clicked_time;
 
 		});
 
