@@ -21,11 +21,19 @@ $(".img-slider").sliding({
 });
 ```
 ##各配置项说明
-#### img_src和img_src_pc_version
-- 前者指明移动端的图片地址，后者指明pc端的图片地址，都放在一个array当中，如["img/1.jpg", "img/2.jpg", "img/3.jpg"]
-#### mobile_img_height和pc_img_height
-- 指定图片的高度，类型为字符串，如"3.0625rem"
-#### transitionTime
-- 仅针对移动端的参数，指定每次手指脱离时切换两张图片时的运动的毫秒数
-#### click_btn_least_gap
-- 仅针对pc的参数，指定用户两次点击切换图片按钮间的最少时间间隔的毫秒数，是为防止用户连续点击而连续切换图片。
+
+- img_src和img_src_pc_version
+
+前者指明移动端的图片地址，后者指明pc端的图片地址，图片地址都放在一个array当中
+
+- mobile_img_height和pc_img_height
+
+指定图片的高度，类型为字符串，如"3.0625rem"
+
+- transitionTime
+
+仅针对移动端的参数，指定每次手指脱离时切换两张图片时的运动的毫秒数
+
+- click_btn_least_gap
+
+仅针对pc的参数，指定用户两次点击切换图片按钮间的最少时间间隔的毫秒数，是为防止用户连续点击而连续切换图片。<br/>
